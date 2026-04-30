@@ -1,13 +1,15 @@
+const BaseController = require('./baseController');
 const User = require('../Models/user');
 
-class UserController {
+class UserController extends BaseController {
+
   // Public method to get all users
   async getAllUsers(req, res) {
     try {
       const users = await User.getAllUsers();
-      res.status(200).json(users);
+      this.success(res, "Users retrieved", users);
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      this.error(res, error.message, 500);
     }
   }
 
@@ -18,12 +20,12 @@ class UserController {
       const user = await User.getUserById(id);
       
       if (!user) {
-        return res.status(404).json({ error: 'User not found' });
+        return this.error(res, 'User not found', 404);
       }
       
-      res.status(200).json(user);
+      this.success(res, "User retrieved", user);
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      this.error(res, error.message, 500);
     }
   }
 
@@ -33,13 +35,13 @@ class UserController {
       const { name } = req.body;
       
       if (!name) {
-        return res.status(400).json({ error: 'Name is required' });
+        return this.error(res, 'Name is required', 400);
       }
       
       const user = await User.createUser({ name });
-      res.status(201).json(user);
+      this.success(res, "User created", user, 201);
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      this.error(res, error.message, 500);
     }
   }
 
@@ -52,12 +54,12 @@ class UserController {
       const user = await User.updateUser(id, { name });
       
       if (!user) {
-        return res.status(404).json({ error: 'User not found' });
+        return this.error(res, 'User not found', 404);
       }
       
-      res.status(200).json(user);
+      this.success(res, "User updated", user);
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      this.error(res, error.message, 500);
     }
   }
 
@@ -68,12 +70,12 @@ class UserController {
       const isDeleted = await User.deleteUser(id);
       
       if (!isDeleted) {
-        return res.status(404).json({ error: 'User not found' });
+        return this.error(res, 'User not found', 404);
       }
       
-      res.status(200).json({ message: 'User deleted successfully' });
+      this.success(res, 'User deleted successfully', { id });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      this.error(res, error.message, 500);
     }
   }
 }
