@@ -1,5 +1,6 @@
-const express = require('express');
-const userRoutes = require('./routes/userRoutes');
+import express from 'express';
+import userRoutes from './routes/userRoutes.js';
+import productRoutes from './routes/productRoutes.js';
 
 const app = express();
 
@@ -8,5 +9,6 @@ app.use(express.json());
 
 // Routes
 app.use('/', userRoutes);
+app.use('/', productRoutes);
 
-module.exports = app;
+export default app;
